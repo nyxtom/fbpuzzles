@@ -3,24 +3,25 @@ from sure import that
 
 class HopTestCase(TestCase):
 
-    def test_hop_puzzle_exists(self):
+    def setUp(self):
+        from puzzles.hop import Puzzle
+        self.runner = Puzzle()
+
+    def test_hop_puzzle_runs(self):
         """
-        Test case to ensure that the hop puzzle exists
+        Test case to ensure that the hop puzzle exists and runs.
         """
-        from puzzles.hop import print_hop, resolve_digits
+        self.runner.run("    \n15   \n")
         pass
 
     def print_hop(self, digits):
-        from puzzles.hop import print_hop
-        return print_hop(digits)
+        return self.runner.print_hop(digits)
 
     def test_resolve_digits(self):
         """
         Test case with whitespace characters
         """
-        from puzzles.hop import resolve_digits
-
-        result = resolve_digits('   \n    15      \n\n\n')
+        result = self.runner.resolve_digits('   \n    15      \n\n\n')
         assert that(result).equals(15), 'Resolve digits should handle whitespace characters'
 
     def test_hop_divisible_three(self):
