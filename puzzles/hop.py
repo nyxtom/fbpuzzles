@@ -4,10 +4,13 @@ class Puzzle(object):
     """
     def run(self, input):
         """
-        Runs the puzzle given the expected input.
+        Loops over a given range, printing the expected output per iteration.
         """
         value = self.resolve_digits(input)
-        self.loop(value)
+        for i in xrange(1, value+1):
+            result = self.print_hop(i)
+            if result:
+                print result
 
     def resolve_digits(self, text):
         """
@@ -31,12 +34,3 @@ class Puzzle(object):
             return 'Hoppity'
         else:
             return None
-
-    def loop(self, value):
-        """
-        Loops over the given range, printing the expected output per iteration.
-        """
-        for i in xrange(1, value+1):
-            result = self.print_hop(i)
-            if result:
-                print result
