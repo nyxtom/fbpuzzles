@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 class Puzzle(object):
     """
     Defines the Hoppity Hop puzzle implementation.
@@ -34,3 +37,22 @@ class Puzzle(object):
             return 'Hoppity'
         else:
             return None
+
+
+# Puzzle runner boilerplate
+if __name__ == "__main__":
+    import sys
+    colors = dict(
+        red="\033[1;31m",
+        nc="\033[0m"
+    )
+    if not len(sys.argv) > 1:
+        print '%sYou must provide an input filename%s' % (colors['red'], colors['nc'])
+    else:
+        try:
+            with open(sys.argv[1]) as input_file:
+                input = input_file.read()
+                runner = Puzzle()
+                runner.run(input)
+        except IOError as e:
+            print e
