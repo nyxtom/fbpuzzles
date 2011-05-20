@@ -6,6 +6,6 @@ class LiarTestCase(TestCase):
         """
         Test case to ensure that the liar puzzle exists and runs.
         """
-        from puzzles.liar import Puzzle
+        from puzzles.liarliar import Puzzle
         self.runner = Puzzle()
         pass
