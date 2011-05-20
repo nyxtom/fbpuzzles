@@ -4,7 +4,7 @@ from sure import that
 class MeepTestCase(TestCase):
 
     def setUp(self):
-        from puzzles.meep import Puzzle
+        from puzzles.meepmeep import Puzzle
         self.runner = Puzzle()
 
     def test_puzzle_runs(self):

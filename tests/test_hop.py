@@ -4,7 +4,7 @@ from sure import that
 class HopTestCase(TestCase):
 
     def setUp(self):
-        from puzzles.hop import Puzzle
+        from puzzles.hoppity import Puzzle
         self.runner = Puzzle()
 
     def test_hop_puzzle_runs(self):
