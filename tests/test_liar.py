@@ -48,18 +48,37 @@ class LiarTestCase(TestCase):
         lines = ['2', 'Jeff 1', 'Joe', 'Tom 1', 'Joe']
         success, result = self.runner.is_valid(lines)
         assert success, 'A valid set of lines should be successful in matching'
-        assert that(result).equals([{'count': '1',  'name': 'Jeff'}, 
-                                    {'count': None, 'name': 'Joe'},
-                                    {'count': '1',  'name': 'Tom'},
-                                    {'count': None, 'name': 'Joe'}])
+        assert that(result).equals([{'count': '1', 'name': 'Jeff'}, 
+                                    {'count': '0', 'name': 'Joe'},
+                                    {'count': '1', 'name': 'Tom'},
+                                    {'count': '0', 'name': 'Joe'}])
 
-    def test_tally(self):
+    def test_build_graph(self):
         """
-        Tests that the tally of the accused versus the non is accurate.
+        Tests that the result of matches from the input 
+        is successfully built into a undirected connected graph.
         """
-        lines = ['2', 'Jeff 1', 'Doug', 'Mindy 2', 'Windy', 'Jeff']
-        success, matches = self.runner.is_valid(lines)
-        assert success, 'A valid set of lines should be successful in matching'
+        lines = ['2', 'Jeff 1', 'Joe', 'Tom 1', 'Joe']
+        success, result = self.runner.is_valid(lines)
+        graph, start = self.runner.build_graph(result)
+        assert graph == {
+                'Jeff': {'Joe': True},
+                'Joe': {
+                    'Tom': True,
+                    'Jeff': True
+                },
+                'Tom': {'Joe': True}
+            }
+        assert that(start).equals('Tom')
 
-        accused, rest = self.runner.tally(matches)
-        assert that(accused).equals(3) and that(rest).equals(1), 'There were 2 people accusing 3 people, and only one person was never accused.'
+    def test_bfs(self):
+        """
+        Tests that the given breadth-first search algorithm appropriately separates the groups.
+        """
+        lines = ['2', 'Jeff 1', 'Joe', 'Tom 1', 'Joe']
+        success, result = self.runner.is_valid(lines)
+        graph, start = self.runner.build_graph(result)
+        g1, g2 = self.runner.bfs(graph, start)
+        assert g1 == {'Jeff': True, 'Tom': True}, 'Jeff and Tom, having a connection through Joe, are in group 1'
+        assert g2 == {'Joe': True}, 'Joe, having no connections out, is in group 2'
+        assert that(len(g1)).equals(2) and that(len(g2)).equals(1), 'BFS should determine a group of 2 and a group of 1'

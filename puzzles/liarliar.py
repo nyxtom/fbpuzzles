@@ -27,7 +27,10 @@ class Puzzle(object):
             print_error(result)
             return
 
-        print '%s %s' % self.tally(result)
+        graph, start = self.build_graph(result)
+        groups = [len(g) for g in self.bfs(graph, start)]
+        groups.reverse()
+        print '%s %s' % (groups[0], groups[1])
 
     def is_valid(self, lines):
         """
@@ -49,28 +52,58 @@ class Puzzle(object):
             if not m:
                 return False, 'All lines must contain a valid name and/or count match'
             else:
-                matches.append(m.groupdict())
+                matches.append(m.groupdict('0'))
 
         return True, matches
 
-    def tally(self, matches):
+    def build_graph(self, matches):
         """
-        Tallies the given matches in the order they were given 
-        to determine the number of people accused versus non-accused.
+        Builds an undirected connected graph using the matching input.
         """
-        pot = set()
-        accused = set()
-        for m in matches:
-            count, name = m.values()
-            if not count and name not in accused:
-                accused.add(name)
-                if name in pot:
-                    pot.remove(name)
-            elif count and name not in accused:
-                pot.add(name)
+        names = set([m['name'] for m in matches])
+        graph = {}
+        for n in names:
+            graph[n] = {}
 
-        return len(accused), len(pot)
+        i = 0
+        while i < len(matches):
+            count, n = matches[i].values()
+            start = n
+            for l in xrange(int(count)):
+                ln = matches[i + 1]['name']
+                graph[n][ln] = graph[ln][n] = True
+                i = i + 1
+            i = i + 1
 
+        return graph, start
+
+    def bfs(self, graph, start):
+        """
+        Groups vertices into two groups using a FIFO queue for traversal.
+        """
+        visited = {start: True}
+        group1 = {start: True}
+        group2 = {}
+
+        import Queue
+        queue = Queue.Queue()
+        queue.put(start)
+        while not queue.empty():
+            n = queue.get()
+            for k in graph[n].keys():
+                if k in visited:
+                    continue
+
+                visited[k] = True
+
+                if group2.get(n):
+                    group1[k] = True
+                if group1.get(n):
+                    group2[k] = True
+
+                queue.put(k)
+
+        return [group1, group2]
 
 # Puzzle runner boilerplate
 if __name__ == "__main__":
