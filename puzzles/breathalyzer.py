@@ -25,6 +25,26 @@ class Puzzle(object):
         """
         pass
 
+    def levenshtein(self, s1, s2):
+        len1 = len(s1)
+        len2 = len(s2)
+        if len1 < len2:
+            return self.levenshtein(s2, s1)
+        if not s1:
+            return len2
+
+        previous_row = xrange(len2 + 1)
+        for i, c1 in enumerate(s1):
+            current_row = [i + 1]
+            for j, c2 in enumerate(s2):
+                insertions = previous_row[j + 1] + 1
+                deletions = current_row[j] + 1
+                substitutions = previous_row[j] + (c1 != c2)
+                current_row.append(min(insertions, deletions, substitutions))
+            previous_row = current_row
+
+        return previous_row[-1]
+
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1:
