@@ -59,8 +59,8 @@ Testing is done with
 Setup and Testing
 =========================
 Add `shelter <https://gist.github.com/975467>`_ to your ~/.bashrc (just a
-simple alias to mkvirtualenv --no-site-packages that I use frequently).::
+simple alias to mkvirtualenv --no-site-packages that I use frequently)::
 
     shelter facebook-puzzles
     pip install -r requirements.txt
-    nosetests
+    nosetests    
