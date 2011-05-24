@@ -26,6 +26,15 @@ class Puzzle(object):
         pass
 
     def levenshtein(self, s1, s2):
+        """
+        Measures the distance between two strings defined as the minimum number of edits
+        needed to transform one string into another using only insertion, deletion or substitution 
+        of a single character. A follow-up to this (including the possibility of using transposition) 
+        is the Damerau-Levenshtein distance algorithm.
+
+        http://en.wikipedia.org/wiki/Levenshtein_distance
+        http://en.wikipedia.org/wiki/Damerau-Levenshtein_distance
+        """
         len1 = len(s1)
         len2 = len(s2)
         if len1 < len2:

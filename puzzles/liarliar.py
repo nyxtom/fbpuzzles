@@ -80,6 +80,9 @@ class Puzzle(object):
     def bfs(self, graph, start):
         """
         Groups vertices into two groups using a FIFO queue for traversal.
+
+        http://en.wikipedia.org/wiki/Adjacency_matrix
+        http://en.wikipedia.org/wiki/Breadth-first_search
         """
         visited = {start: True}
         group1 = {start: True}
