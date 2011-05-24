@@ -3,7 +3,7 @@ Facebook Engineering Puzzles
 
 I love puzzles. So of course this repository is the tests and solutions to
 the list of puzzles shown on 
-`Facebook Puzzle Masters <http://www.facebook.com/careers/puzzles.php> `_.
+`Facebook Puzzle Masters <http://www.facebook.com/careers/puzzles.php>`_.
 
 
 Instructions
@@ -64,3 +64,4 @@ simple alias to mkvirtualenv --no-site-packages that I use frequently)::
     shelter facebook-puzzles
     pip install -r requirements.txt
     nosetests    
+::
