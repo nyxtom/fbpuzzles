@@ -38,3 +38,19 @@ class BreathalyzerTestCase(TestCase):
 
         result = self.runner.levenshtein('accosinly', 'occasionally')
         assert that(result).equals(5)
+
+    def test_boundary_levenshtein(self):
+        """
+        Test case to ensure that the boundaries for levenshtein are hit
+        and work as expected for empty, * and...etc.
+        """
+        empty = ''
+        assert that(self.runner.levenshtein(empty, empty)).equals(0)
+
+        text = ''
+        for i in range(1, 10):
+            text += '*'
+            result = self.runner.levenshtein(empty, text)
+            assert that(result).equals(i)
+            result = self.runner.levenshtein(text, empty)
+            assert that(result).equals(i)
