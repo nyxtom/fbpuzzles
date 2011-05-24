@@ -31,3 +31,10 @@ class BreathalyzerTestCase(TestCase):
         # Testing insertion
         result = self.runner.levenshtein('wondr', 'wonderflow')
         assert that(result).equals(5)
+
+        # Test multiple combinations
+        result = self.runner.levenshtein('alright', 'all right')
+        assert that(result).equals(2)
+
+        result = self.runner.levenshtein('accosinly', 'occasionally')
+        assert that(result).equals(5)
