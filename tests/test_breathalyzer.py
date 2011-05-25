@@ -54,3 +54,20 @@ class BreathalyzerTestCase(TestCase):
             assert that(result).equals(i)
             result = self.runner.levenshtein(text, empty)
             assert that(result).equals(i)
+
+    def test_soundex(self):
+        """
+        Test case to ensure soundex is appropriately resolving.
+        """
+        variations = ['london', 'lONDoN', '.,lon123don', 'l on do n', 'londn', 
+                      'londdn', 'londan', 'lnodno']
+        for v in variations:
+            assert that(self.runner.soundex(v)).equals('L535')
+
+    def test_soundex_boundary(self):
+        """
+        Test case to ensure that the boundary cases of the soundex algorithm are handled appropriately.
+        """
+        assert that(self.runner.soundex('')).equals('0000')
+        assert that(self.runner.soundex('   \r\n')).equals('0000')
+        assert that(self.runner.soundex('3940')).equals('0000')
