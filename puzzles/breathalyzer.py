@@ -17,13 +17,58 @@ class Puzzle(object):
     Defines the breathalyzer puzzle implementation.
     """
 
+    def __init__(self, words=None):
+        self.DICTIONARY = '/var/tmp/twl06.txt'
+        self.WORDS = {} if not words else words
+
     def run(self, input):
         """
         Given an example sentence input. This will 
         run the appropriate distance formula for 
         approximating correctness for the solution.
         """
-        pass
+        print self.find_distance(input)
+
+    def find_distance(self, input):
+        """
+        Performing a search per word, the given target 
+        word should appropriately determine the smallest 
+        levenshtein distance within the dictionary.
+        """
+        targets = input.strip().lower().split(' ')
+        max_costs = []
+        for i, target in enumerate(targets):
+            results = self.search(target)
+            max_costs.append(None)
+            for r in results:
+                cost = self.levenshtein(target, r)
+                if not max_costs[i] or max_costs[i] > cost:
+                    max_costs[i] = cost
+
+        return sum([c for c in max_costs if c])
+
+    def search(self, target):
+        """
+        Using the already built WORDS dictionary, leverage the 
+        soundex of all words in the given target to determine the 
+        results that came from the search.
+        """
+        # Calculate the soundex of the given target
+        soundex = self.soundex(target.strip().lower())
+        return self.WORDS.get(soundex, [])
+
+    def build_dictionary(self):
+        """
+        Pre-processes the dictionary into a soundex dictionary 
+        that can be processed appropriately for similar words.
+        """
+        with open(self.DICTIONARY) as wf:
+            for line in wf:
+                line = line.strip().lower()
+                soundex = self.soundex(line)
+                if not self.WORDS.get(soundex):
+                    self.WORDS[soundex] = []
+                self.WORDS[soundex].append(line)
 
     def soundex(self, name, len=4):
         """ 
@@ -92,6 +137,7 @@ if __name__ == "__main__":
             with open(sys.argv[1]) as input_file:
                 input = input_file.read()
                 runner = Puzzle()
+                runner.build_dictionary()
                 runner.run(input)
         except IOError as e:
             print_error(e)

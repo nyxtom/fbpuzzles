@@ -7,6 +7,15 @@ class BreathalyzerTestCase(TestCase):
         from puzzles.breathalyzer import Puzzle
         self.runner = Puzzle()
 
+        # initialize the sample with a small dictionary
+        processed_words = {'D235': ['dictionary'], 
+                           'S514': ['sample'], 
+                           'I200': ['is'], 
+                           'T200': ['this'], 
+                           'A000': ['a'], 
+                           'T230': ['test']}
+        self.runner.WORDS = processed_words
+
     def test_puzzle_runs(self):
         """
         Test case to ensure that the puzzle exists and runs.
@@ -71,3 +80,31 @@ class BreathalyzerTestCase(TestCase):
         assert that(self.runner.soundex('')).equals('0000')
         assert that(self.runner.soundex('   \r\n')).equals('0000')
         assert that(self.runner.soundex('3940')).equals('0000')
+
+    def test_search(self):
+        """
+        Tests to ensure that a given search query against 
+        a soundex dictionary will return the appropriate result
+        relative to the input's resolving soundex.
+        """
+        # Ensure that we use a soundex from the given dictionary
+        assert that(self.runner.soundex('tist')).equals('T230')
+
+        results = self.runner.search('tist')
+        assert 'test' in results, 'Given a soundex dictionary, tist search should result in test'
+
+    def test_find_distance(self):
+        """
+        Test case for finding the edit distance from the given input.
+        """
+        # single word test case
+        result = self.runner.find_distance('tist')
+        assert that(result).equals(1), 'Single word test case for a single substitution edit'
+
+        # multi-word test case with insertion
+        result = self.runner.find_distance('tist dctinr')
+        assert that(result).equals(5), 'Multi-word test case for insertion and substitutions'
+
+        # multi-word test case with deletions
+        result = self.runner.find_distance('iis thisa')
+        assert that(result).equals(2), 'Multi-word test case for deletions'
